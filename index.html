@@ -411,45 +411,51 @@
 
 <script>
   // ---- Yo apoyo counter ----
+  // Contador compartido real usando CountAPI (gratis, sin registro).
+  // La clave debe ser única para que no se mezcle con otros sitios.
   const apoyoBtn = document.getElementById('apoyoBtn');
   const counterNum = document.getElementById('counterNum');
-  const COUNT_KEY = 'apoyo-count';
-  const VOTED_KEY = 'ya-apoyo';
+  const COUNTER_KEY = 'pasa-tu-trapo-andre123artcmd-apoyo';
+  const VOTED_KEY = 'pasaTuTrapo_yaApoyo';
+  const GET_URL = `https://countapi.mileshilliard.com/api/v1/get/${COUNTER_KEY}`;
+  const HIT_URL = `https://countapi.mileshilliard.com/api/v1/hit/${COUNTER_KEY}`;
+
+  function markAsVoted(){
+    apoyoBtn.textContent = '¡Ya apoyas! 🧽';
+    apoyoBtn.classList.add('voted');
+    apoyoBtn.disabled = true;
+  }
 
   async function loadCount(){
     try{
-      const res = await window.storage.get(COUNT_KEY, true);
-      counterNum.textContent = res ? res.value : '0';
+      const res = await fetch(GET_URL);
+      if(res.ok){
+        const data = await res.json();
+        counterNum.textContent = data.value;
+      } else {
+        counterNum.textContent = '0';
+      }
     }catch(e){
       counterNum.textContent = '0';
     }
-    try{
-      const voted = await window.storage.get(VOTED_KEY, false);
-      if(voted && voted.value === 'true'){
-        apoyoBtn.textContent = '¡Ya apoyas! 🧽';
-        apoyoBtn.classList.add('voted');
-        apoyoBtn.disabled = true;
-      }
-    }catch(e){ /* not voted yet */ }
+    if(localStorage.getItem(VOTED_KEY) === 'true'){
+      markAsVoted();
+    }
   }
 
   apoyoBtn.addEventListener('click', async () => {
+    if(localStorage.getItem(VOTED_KEY) === 'true') return;
     apoyoBtn.disabled = true;
     try{
-      let current = 0;
-      try{
-        const res = await window.storage.get(COUNT_KEY, true);
-        current = res ? parseInt(res.value, 10) || 0 : 0;
-      }catch(e){ current = 0; }
-      const next = current + 1;
-      await window.storage.set(COUNT_KEY, String(next), true);
-      await window.storage.set(VOTED_KEY, 'true', false);
-      counterNum.textContent = String(next);
-      apoyoBtn.textContent = '¡Ya apoyas! 🧽';
-      apoyoBtn.classList.add('voted');
+      const res = await fetch(HIT_URL);
+      const data = await res.json();
+      counterNum.textContent = data.value;
+      localStorage.setItem(VOTED_KEY, 'true');
+      markAsVoted();
     }catch(e){
       apoyoBtn.disabled = false;
       apoyoBtn.textContent = 'Yo apoyo';
+      alert('No se pudo registrar tu apoyo. Revisa tu conexión e intenta de nuevo.');
     }
   });
 
