@@ -1,1 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pasa tu Trapo — Campaña de orden y limpieza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg: #F4F7F1;
+    --paper: #FFFFFF;
+    --ink: #1F2A24;
+    --yellow: #FFC93C;
+    --yellow-deep: #E8A800;
+    --blue: #2E86AB;
+    --blue-deep: #1E5F7D;
+    --green: #4C9A6A;
+    --coral: #E85D4E;
+    --line: rgba(31,42,36,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    line-height:0.95;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* Gingham / trapo texture divider */
+  .trapo-strip{
+    height:22px;
+    background-image:
+      repeating-linear-gradient(45deg, var(--yellow) 0 10px, transparent 10px 20px),
+      repeating-linear-gradient(-45deg, var(--yellow) 0 10px, transparent 10px 20px);
+    background-color:var(--paper);
+    background-blend-mode:multiply;
+    opacity:0.9;
+  }
+  .gingham{
+    background-color:#FFFDF6;
+    background-image:
+      linear-gradient(90deg, rgba(46,134,171,0.14) 50%, transparent 50%),
+      linear-gradient(rgba(46,134,171,0.14) 50%, transparent 50%);
+    background-size:24px 24px;
+  }
+
+  /* NAV */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(244,247,241,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:1080px; margin:0 auto;
+  }
+  .brand{
+    font-family:'Anton',sans-serif; font-size:1.15rem; text-transform:uppercase;
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand .swatch{width:14px;height:14px;background:var(--yellow);border:2px solid var(--ink);}
+  nav.links{display:flex; gap:22px; font-weight:600; font-size:0.92rem;}
+  nav.links a{text-decoration:none; opacity:0.75; transition:opacity .2s;}
+  nav.links a:hover{opacity:1;}
+  .nav-toggle{display:none;}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:78px 24px 60px;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .hero .wrap{position:relative; text-align:center;}
+  .eyebrow{
+    display:inline-block; font-weight:700; font-size:0.78rem; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--blue-deep); margin-bottom:18px;
+    border:2px solid var(--blue-deep); padding:5px 14px; border-radius:999px;
+  }
+  h1.title{
+    font-size:clamp(3rem, 11vw, 7.2rem);
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  h1.title .accent{color:var(--blue);}
+  .subtitle{
+    max-width:560px; margin:18px auto 34px; font-size:1.08rem; line-height:1.55; color:#3c4a43;
+  }
+  .cta-row{display:flex; flex-direction:column; align-items:center; gap:14px;}
+  #apoyoBtn{
+    font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:1px;
+    font-size:1.4rem; padding:18px 46px; border:none; cursor:pointer;
+    background:var(--yellow); color:var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    transition:transform .12s, box-shadow .12s;
+  }
+  #apoyoBtn:hover{transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--ink);}
+  #apoyoBtn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
+  #apoyoBtn.voted{background:var(--green); color:#fff;}
+  #apoyoBtn:disabled{cursor:default;}
+  .counter-line{display:flex; align-items:baseline; gap:10px; font-size:1rem; color:#3c4a43;}
+  .counter-num{
+    font-family:'Anton',sans-serif; font-size:2rem; color:var(--blue-deep);
+    min-width:70px; display:inline-block; text-align:center;
+  }
+
+  /* SECTION shared */
+  section{padding:70px 0;}
+  .section-head{max-width:640px; margin:0 auto 46px; text-align:center;}
+  .section-head .kicker{
+    font-weight:700; font-size:0.78rem; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--coral); margin-bottom:10px; display:block;
+  }
+  .section-head h2{font-size:clamp(2rem,5vw,2.9rem);}
+  .section-head p{color:#3c4a43; line-height:1.6; margin-top:12px;}
+
+  .intro{background:var(--paper); padding:70px 0;}
+  .intro .wrap{max-width:760px; text-align:center;}
+  .intro h2{font-size:clamp(1.8rem,4.5vw,2.4rem);}
+  .intro p{font-size:1.08rem; line-height:1.7; color:#3c4a43; margin-top:16px;}
+
+  /* AREAS */
+  .areas{background:var(--bg);}
+  .area-card{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    box-shadow:8px 8px 0 var(--line);
+    margin-bottom:56px;
+    display:grid; grid-template-columns:1fr 1fr; overflow:hidden;
+  }
+  .area-card:nth-child(even){grid-template-columns:1fr 1fr;}
+  .area-card.reverse{direction:rtl;}
+  .area-card.reverse > *{direction:ltr;}
+  .area-visual{
+    position:relative; min-height:280px; overflow:hidden; cursor:grab;
+    border-right:2px solid var(--ink);
+  }
+  .area-card.reverse .area-visual{border-right:none; border-left:2px solid var(--ink);}
+  .state{
+    position:absolute; inset:0; padding:22px;
+    display:flex; flex-wrap:wrap; align-content:center; gap:10px; justify-content:center;
+  }
+  .state.after{clip-path: inset(0 0 0 100%);}
+  .before{background:#F1E9DA;}
+  .after{background:#DCEEE2;}
+  .chip{
+    width:34px; height:34px; border-radius:6px; background:var(--blue);
+    border:2px solid var(--ink);
+  }
+  .before .chip{
+    background:var(--coral);
+    transform:rotate(var(--r,0deg));
+  }
+  .after .chip{background:var(--green);}
+  .slider-line{
+    position:absolute; top:0; bottom:0; left:0; width:3px; background:var(--ink);
+    box-shadow:0 0 0 2px var(--yellow);
+  }
+  .slider-input{
+    position:absolute; inset:0; width:100%; height:100%; margin:0;
+    opacity:0; cursor:ew-resize;
+    -webkit-appearance:none; appearance:none;
+  }
+  .drag-hint{
+    position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; font-size:0.72rem; font-weight:600;
+    padding:5px 10px; border-radius:999px; pointer-events:none;
+    text-transform:uppercase; letter-spacing:1px;
+  }
+  .area-copy{padding:38px 34px; display:flex; flex-direction:column; justify-content:center;}
+  .area-copy .num{
+    font-family:'Anton',sans-serif; color:var(--yellow-deep); font-size:0.95rem; margin-bottom:8px;
+  }
+  .area-copy h3{font-size:2rem; margin:0 0 12px;}
+  .area-copy ul{margin:0; padding-left:20px; color:#3c4a43; line-height:1.7;}
+  .area-copy li{margin-bottom:6px;}
+
+  /* QR */
+  .qr-section{background:var(--ink); color:#fff;}
+  .qr-section .section-head h2, .qr-section .section-head p{color:#fff;}
+  .qr-section .section-head .kicker{color:var(--yellow);}
+  .qr-box{
+    display:flex; gap:40px; align-items:center; justify-content:center; flex-wrap:wrap;
+  }
+  .qr-card{
+    background:#fff; padding:18px; border:3px solid var(--yellow);
+  }
+  #qrcode{width:180px; height:180px;}
+  .qr-side{max-width:340px;}
+  .qr-side p{color:#d7ddd9; line-height:1.6;}
+  .link-row{
+    display:flex; gap:10px; margin-top:16px; background:#2b3830; padding:10px; border:1px solid #445048;
+  }
+  .link-row input{
+    flex:1; background:transparent; border:none; color:#fff; font-size:0.85rem; outline:none;
+  }
+  .link-row button{
+    background:var(--yellow); border:none; padding:8px 16px; font-weight:700; cursor:pointer;
+    font-size:0.82rem; text-transform:uppercase; letter-spacing:1px;
+  }
+
+  /* CREDITS */
+  .credits{background:var(--paper);}
+  .credits .wrap{text-align:center;}
+  .credits h2{font-size:clamp(1.8rem,4vw,2.3rem); margin-bottom:8px;}
+  .credits .role{color:#3c4a43; margin-bottom:36px;}
+  .credit-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:18px; max-width:900px; margin:0 auto;
+  }
+  .credit-card{
+    border:2px solid var(--ink); padding:22px 12px; background:var(--bg);
+    position:relative;
+  }
+  .credit-card::before{
+    content:attr(data-i);
+    position:absolute; top:-14px; left:14px; background:var(--yellow);
+    border:2px solid var(--ink); font-family:'Anton',sans-serif; font-size:0.75rem;
+    padding:2px 8px;
+  }
+  .credit-card .name{font-weight:700; font-size:1.02rem;}
+
+  footer{
+    background:var(--ink); color:#c9d1cb; padding:30px 24px; text-align:center; font-size:0.85rem;
+  }
+  footer strong{color:#fff;}
+
+  @media (max-width: 760px){
+    nav.links{display:none;}
+    .area-card, .area-card.reverse{grid-template-columns:1fr; direction:ltr;}
+    .area-visual{border-right:none !important; border-left:none !important; border-bottom:2px solid var(--ink); min-height:220px;}
+    .credit-grid{grid-template-columns:repeat(2,1fr);}
+    #apoyoBtn{font-size:1.15rem; padding:16px 32px;}
+    .qr-box{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="swatch"></span>Pasa tu Trapo</div>
+    <nav class="links">
+      <a href="#sillas">Sillas</a>
+      <a href="#patios">Patios</a>
+      <a href="#pasillos">Pasillos</a>
+      <a href="#compartir">Compartir</a>
+      <a href="#creditos">Créditos</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Campaña del instituto</span>
+    <h1 class="title">Pasa tu <span class="accent">Trapo</span></h1>
+    <p class="subtitle">Un instituto ordenado se nota en cada silla, cada patio y cada pasillo. Súmate al compromiso: deja cada espacio mejor de como lo encontraste.</p>
+    <div class="cta-row">
+      <button id="apoyoBtn">Yo apoyo</button>
+      <div class="counter-line">Personas que ya apoyan: <span class="counter-num" id="counterNum">—</span></div>
+    </div>
+  </div>
+</section>
+<div class="trapo-strip"></div>
+
+<section class="intro">
+  <div class="wrap">
+    <h2>¿Por qué "pasa tu trapo"?</h2>
+    <p>Porque el orden no depende de una sola persona, depende de todos. Esta campaña nace para recordarnos algo simple: acomodar una silla, recoger la basura del patio o mantener libre un pasillo toma segundos, pero cambia por completo cómo se siente nuestro instituto. Cada apartado abajo te muestra en qué fijarte — desliza cada tarjeta para ver el antes y el después.</p>
+  </div>
+</section>
+
+<section class="areas">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Nuestros frentes</span>
+      <h2>Tres espacios, un mismo compromiso</h2>
+    </div>
+
+    <div class="area-card" id="sillas">
+      <div class="area-visual" data-visual>
+        <div class="state before">
+          <div class="chip" style="--r:12deg"></div><div class="chip" style="--r:-8deg"></div>
+          <div class="chip" style="--r:20deg"></div><div class="chip" style="--r:-15deg"></div>
+          <div class="chip" style="--r:5deg"></div><div class="chip" style="--r:-20deg"></div>
+        </div>
+        <div class="state after">
+          <div class="chip"></div><div class="chip"></div><div class="chip"></div>
+          <div class="chip"></div><div class="chip"></div><div class="chip"></div>
+        </div>
+        <div class="slider-line" style="left:50%"></div>
+        <input type="range" class="slider-input" min="0" max="100" value="50">
+        <span class="drag-hint">Desliza →</span>
+      </div>
+      <div class="area-copy">
+        <span class="num">01 · Sillas</span>
+        <h3>Cada silla en su lugar</h3>
+        <ul>
+          <li>Acomódala bajo la mesa al terminar de usarla.</li>
+          <li>No la arrastres: levántala para no rayar el piso.</li>
+          <li>Si la ves fuera de lugar, tómate 5 segundos y ordénala aunque no sea tuya.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="area-card reverse" id="patios">
+      <div class="area-visual" data-visual>
+        <div class="state before">
+          <div class="chip" style="--r:30deg"></div><div class="chip" style="--r:-25deg"></div>
+          <div class="chip" style="--r:10deg"></div><div class="chip" style="--r:-10deg"></div>
+          <div class="chip" style="--r:22deg"></div>
+        </div>
+        <div class="state after">
+          <div class="chip"></div><div class="chip"></div><div class="chip"></div>
+          <div class="chip"></div><div class="chip"></div>
+        </div>
+        <div class="slider-line" style="left:50%"></div>
+        <input type="range" class="slider-input" min="0" max="100" value="50">
+        <span class="drag-hint">Desliza →</span>
+      </div>
+      <div class="area-copy">
+        <span class="num">02 · Patios</span>
+        <h3>Patios libres de basura</h3>
+        <ul>
+          <li>Usa los tachos, no el suelo — están para eso.</li>
+          <li>Recoge tu envoltura aunque el patio ya esté sucio.</li>
+          <li>Recuerda a tus compañeros con buena onda, no con regaño.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="area-card" id="pasillos">
+      <div class="area-visual" data-visual>
+        <div class="state before">
+          <div class="chip" style="--r:18deg"></div><div class="chip" style="--r:-12deg"></div>
+          <div class="chip" style="--r:26deg"></div><div class="chip" style="--r:-18deg"></div>
+        </div>
+        <div class="state after">
+          <div class="chip"></div><div class="chip"></div><div class="chip"></div><div class="chip"></div>
+        </div>
+        <div class="slider-line" style="left:50%"></div>
+        <input type="range" class="slider-input" min="0" max="100" value="50">
+        <span class="drag-hint">Desliza →</span>
+      </div>
+      <div class="area-copy">
+        <span class="num">03 · Pasillos</span>
+        <h3>Pasillos siempre despejados</h3>
+        <ul>
+          <li>No dejes mochilas ni útiles obstruyendo el paso.</li>
+          <li>Camina, no corras — evita choques y desorden.</li>
+          <li>Un pasillo limpio es la primera impresión del instituto.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gingham" style="height:26px;"></div>
+
+<section class="qr-section" id="compartir">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Divulga la campaña</span>
+      <h2>Compártela con un escaneo</h2>
+      <p>Muestra este código en carteleras, salones o redes del instituto para que cualquiera se sume.</p>
+    </div>
+    <div class="qr-box">
+      <div class="qr-card"><div id="qrcode"></div></div>
+      <div class="qr-side">
+        <p>El código apunta directo a esta página. Cópiala y pégala donde la necesites:</p>
+        <div class="link-row">
+          <input id="pageLink" type="text" readonly>
+          <button id="copyBtn">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="credits" id="creditos">
+  <div class="wrap">
+    <h2>Un trabajo de</h2>
+    <p class="role">Equipo detrás de la campaña</p>
+    <div class="credit-grid">
+      <div class="credit-card" data-i="01"><div class="name">Andre Gamboa</div></div>
+      <div class="credit-card" data-i="02"><div class="name">Nataly Rivera</div></div>
+      <div class="credit-card" data-i="03"><div class="name">Carlos Durand</div></div>
+      <div class="credit-card" data-i="04"><div class="name">Yadhir Pacari</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Pasa tu Trapo</strong> — campaña de orden y limpieza del instituto.
+</footer>
+
+<script>
+  // ---- Yo apoyo counter ----
+  // Contador compartido real usando CountAPI (gratis, sin registro).
+  // La clave debe ser única para que no se mezcle con otros sitios.
+  const apoyoBtn = document.getElementById('apoyoBtn');
+  const counterNum = document.getElementById('counterNum');
+  const COUNTER_KEY = 'pasa-tu-trapo-andre123artcmd-apoyo';
+  const VOTED_KEY = 'pasaTuTrapo_yaApoyo';
+  const GET_URL = `https://countapi.mileshilliard.com/api/v1/get/${COUNTER_KEY}`;
+  const HIT_URL = `https://countapi.mileshilliard.com/api/v1/hit/${COUNTER_KEY}`;
+
+  function markAsVoted(){
+    apoyoBtn.textContent = '¡Ya apoyas! 🧽';
+    apoyoBtn.classList.add('voted');
+    apoyoBtn.disabled = true;
+  }
+
+  async function loadCount(){
+    try{
+      const res = await fetch(GET_URL);
+      if(res.ok){
+        const data = await res.json();
+        counterNum.textContent = data.value;
+      } else {
+        counterNum.textContent = '0';
+      }
+    }catch(e){
+      counterNum.textContent = '0';
+    }
+    if(localStorage.getItem(VOTED_KEY) === 'true'){
+      markAsVoted();
+    }
+  }
+
+  apoyoBtn.addEventListener('click', async () => {
+    if(localStorage.getItem(VOTED_KEY) === 'true') return;
+    apoyoBtn.disabled = true;
+    try{
+      const res = await fetch(HIT_URL);
+      const data = await res.json();
+      counterNum.textContent = data.value;
+      localStorage.setItem(VOTED_KEY, 'true');
+      markAsVoted();
+    }catch(e){
+      apoyoBtn.disabled = false;
+      apoyoBtn.textContent = 'Yo apoyo';
+      alert('No se pudo registrar tu apoyo. Revisa tu conexión e intenta de nuevo.');
+    }
+  });
+
+  loadCount();
+
+  // ---- Before/after sliders ----
+  document.querySelectorAll('[data-visual]').forEach(visual => {
+    const input = visual.querySelector('.slider-input');
+    const after = visual.querySelector('.after');
+    const line = visual.querySelector('.slider-line');
+    const hint = visual.querySelector('.drag-hint');
+    function update(){
+      const v = input.value;
+      after.style.clipPath = `inset(0 0 0 ${v}%)`;
+      line.style.left = v + '%';
+      if(v > 15) hint.style.opacity = 0;
+    }
+    input.addEventListener('input', update);
+    update();
+  });
+
+  // ---- QR code + link ----
+  const pageUrl = window.location.href;
+  document.getElementById('pageLink').value = pageUrl;
+  new QRCode(document.getElementById('qrcode'), {
+    text: pageUrl,
+    width: 160,
+    height: 160,
+    colorDark: '#1F2A24',
+    colorLight: '#ffffff'
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const input = document.getElementById('pageLink');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const original = btn.textContent;
+      btn.textContent = '¡Copiado!';
+      setTimeout(() => btn.textContent = original, 1500);
+    }).catch(()=>{});
+  });
+</script>
+
+</body>
+</html>
 
